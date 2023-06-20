@@ -6,7 +6,7 @@ var scene,
 	renderer, 
 	camera;
 
-let directionalLight,
+let light,
 	lightProbe;
 
 /// ***************************************************************
@@ -51,6 +51,31 @@ function animate(time) {
 
     /// ***************************************************************
 
+	var mercury = scene.getObjectByName("mercury");
+
+	mercury.rotation.x = time * 0.00001;
+	mercury.rotation.y = time * 0.0001;
+
+	var mercuryPosX = 0.5*Math.sin(0.003*time);
+	var mercuryPosY = 0.5*Math.cos(0.003*time);
+
+	mercury.position.set(mercuryPosX, mercuryPosY, 0);
+
+	/// ***************************************************************
+
+	var venus = scene.getObjectByName("venus");
+
+	venus.rotation.x = time * 0.00001;
+	venus.rotation.y = time * 0.0001;
+	venus.rotation.z = time * 0.0005;
+
+	var venusPosX = 0.6*Math.sin(0.0025*time);
+	var venusPosY = 0.6*Math.cos(0.0025*time);
+
+	venus.position.set(venusPosX, venusPosY, 0);
+	
+    /// ***************************************************************
+
 	var earth = scene.getObjectByName("earth");
 
 	earth.rotation.x = time * 0.00001;
@@ -62,17 +87,6 @@ function animate(time) {
 
 	earth.position.set(earthPosX, earthPosY, 0);
 
-    /// ***************************************************************
-
-	var mercury = scene.getObjectByName("mercury");
-
-	mercury.rotation.x = time * 0.00001;
-	mercury.rotation.y = time * 0.0001;
-
-	var mercuryPosX = 0.5*Math.sin(0.003*time);
-	var mercuryPosY = 0.5*Math.cos(0.003*time);
-
-	mercury.position.set(mercuryPosX, mercuryPosY, 0);
 
 	renderer.clear();
 	renderer.render(scene, camera);
@@ -89,17 +103,6 @@ function buildScene() {
 	const axis = new THREE.AxesHelper();
 	scene.add(axis);
 
-	var earthMaterials = new THREE.MeshPhongMaterial({ color: 0x0defff });
-                 
-	var earthGeom = new THREE.SphereGeometry(0.02); 
-
-	const earthMesh = new THREE.Mesh(earthGeom, earthMaterials); 
-	earthMesh.name = "earth";
-
-	scene.add( earthMesh );
-
-    /// ***************************************************************
-
 	var mercuryMaterials = new THREE.MeshPhongMaterial({ color: 0xfeef00 });
                  
 	var mercuryGeom = new THREE.SphereGeometry(0.01); 
@@ -111,7 +114,29 @@ function buildScene() {
 
     /// ***************************************************************
 
-    var sunMaterials = new THREE.MeshPhongMaterial({ color: 0xfebe00 });
+	var venusMaterials = new THREE.MeshPhongMaterial({ color: 0xfeef90 });
+                 
+	var venusGeom = new THREE.SphereGeometry(0.02); 
+
+	const venusMesh = new THREE.Mesh(venusGeom, venusMaterials); 
+	venusMesh.name = "venus";
+
+	scene.add( venusMesh );
+
+    /// ***************************************************************
+
+	var earthMaterials = new THREE.MeshPhongMaterial({ color: 0x0defff });
+                 
+	var earthGeom = new THREE.SphereGeometry(0.02); 
+
+	const earthMesh = new THREE.Mesh(earthGeom, earthMaterials); 
+	earthMesh.name = "earth";
+
+	scene.add( earthMesh );
+
+    /// ***************************************************************
+
+    var sunMaterials = new THREE.MeshPhongMaterial({ color: 0xfebe00, emissive: 0xfebe00 });
     var sunGeom = new THREE.SphereGeometry(0.2);
     const sunMesh = new THREE.Mesh(sunGeom, sunMaterials);
     sunMesh.name = "sun";
@@ -119,11 +144,11 @@ function buildScene() {
 
     scene.add( sunMesh );
 
+	/// ***************************************************************
 
-
-	directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
-	directionalLight.position.set( 10, 10, 10 );
-	scene.add( directionalLight );
+	light = new THREE.PointLight( 0xffffff, 1.0 );
+	light.position.set( 0, 0, 0 );
+	scene.add( light );
 
 	lightProbe = new THREE.LightProbe();
 	lightProbe.intensity = 0.64
