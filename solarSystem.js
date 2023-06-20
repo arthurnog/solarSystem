@@ -87,6 +87,21 @@ function animate(time) {
 
 	earth.position.set(earthPosX, earthPosY, 0);
 
+	/// ***************************************************************
+
+	var marth = scene.getObjectByName("marth");
+
+	marth.rotation.x = time * 0.00001;
+	marth.rotation.y = time * 0.0001;
+	marth.rotation.z = time * 0.0005;
+
+	var marthPosX = 0.75*Math.sin(0.0019*time);
+	var marthPosY = 0.75*Math.cos(0.0019*time);
+
+	marth.position.set(marthPosX, marthPosY, 0);
+
+	/// ***************************************************************
+
 
 	renderer.clear();
 	renderer.render(scene, camera);
@@ -133,6 +148,17 @@ function buildScene() {
 	earthMesh.name = "earth";
 
 	scene.add( earthMesh );
+
+    /// ***************************************************************
+
+	var marthMaterials = new THREE.MeshPhongMaterial({ color: 0xfe1d0a });
+                 
+	var marthGeom = new THREE.SphereGeometry(0.019); 
+
+	const marthMesh = new THREE.Mesh(marthGeom, marthMaterials); 
+	marthMesh.name = "marth";
+
+	scene.add( marthMesh );
 
     /// ***************************************************************
 
