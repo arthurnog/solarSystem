@@ -28,7 +28,7 @@ function main() {
 
 	scene 	= new THREE.Scene();
 	
-	camera = new THREE.OrthographicCamera( -1.0, 1.0, 1.0, -1.0, -1.0, 1.0 );
+	camera = new THREE.OrthographicCamera( -2.0, 2.0, 2.0, -2.0, -2.0, 5.0 );
 	scene.add( camera );
 
 	buildScene();
@@ -102,6 +102,18 @@ function animate(time) {
 
 	/// ***************************************************************
 
+	var jupiter = scene.getObjectByName("jupiter");
+
+	jupiter.rotation.x = time * 0.00001;
+	jupiter.rotation.y = time * 0.0001;
+	jupiter.rotation.z = time * 0.0005;
+
+	var jupiterPosX = 1.75*Math.sin(0.0009*time);
+	var jupiterPosY = 1.75*Math.cos(0.0009*time);
+
+	jupiter.position.set(jupiterPosX, jupiterPosY, 0);
+
+	/// ***************************************************************
 
 	renderer.clear();
 	renderer.render(scene, camera);
@@ -159,6 +171,17 @@ function buildScene() {
 	marthMesh.name = "marth";
 
 	scene.add( marthMesh );
+
+    /// ***************************************************************
+
+	var jupiterMaterials = new THREE.MeshPhongMaterial({ color: 0xfe1e0a });
+                 
+	var jupiterGeom = new THREE.SphereGeometry(0.09); 
+
+	const jupiterMesh = new THREE.Mesh(jupiterGeom, jupiterMaterials); 
+	jupiterMesh.name = "jupiter";
+
+	scene.add( jupiterMesh );
 
     /// ***************************************************************
 
