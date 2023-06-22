@@ -19,8 +19,8 @@ function main() {
 
 	renderer.setClearColor(new THREE.Color(0.0, 0.0, 0.0));
 
-	rendSize.x = 
-	rendSize.y = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+	rendSize.x = window.innerWidth;
+	rendSize.y = window.innerHeight;
 
 	renderer.setSize(rendSize.x, rendSize.y);
 
@@ -28,7 +28,15 @@ function main() {
 
 	scene 	= new THREE.Scene();
 	
-	camera = new THREE.OrthographicCamera( -2.0, 2.0, 2.0, -2.0, -2.0, 5.0 );
+	camera = new THREE.OrthographicCamera( 
+		window.innerWidth/-200.0, 
+		window.innerWidth/200.0,
+		window.innerHeight/200.0,
+		window.innerHeight/-200.0,
+		-2.0,
+		5.0
+	);
+
 	scene.add( camera );
 
 	buildScene();
@@ -115,6 +123,45 @@ function animate(time) {
 
 	/// ***************************************************************
 
+	var saturn = scene.getObjectByName("saturn");
+
+	saturn.rotation.x = time * 0.00001;
+	saturn.rotation.y = time * 0.0001;
+	saturn.rotation.z = time * 0.0005;
+
+	var saturnPosX = 2.2*Math.sin(0.0007*time);
+	var saturnPosY = 2.2*Math.cos(0.0007*time);
+
+	saturn.position.set(saturnPosX, saturnPosY, 0);
+
+	/// ***************************************************************
+
+	var uranus = scene.getObjectByName("uranus");
+
+	uranus.rotation.x = time * 0.00001;
+	uranus.rotation.y = time * 0.0001;
+	uranus.rotation.z = time * 0.0005;
+
+	var uranusPosX = 2.6*Math.sin(0.0005*time);
+	var uranusPosY = 2.6*Math.cos(0.0005*time);
+
+	uranus.position.set(uranusPosX, uranusPosY, 0);
+
+	/// ***************************************************************
+
+	var neptune = scene.getObjectByName("neptune");
+
+	neptune.rotation.x = time * 0.00001;
+	neptune.rotation.y = time * 0.0001;
+	neptune.rotation.z = time * 0.0005;
+
+	var neptunePosX = 3*Math.sin(0.00045*time);
+	var neptunePosY = 3*Math.cos(0.00045*time);
+
+	neptune.position.set(neptunePosX, neptunePosY, 0);
+
+	/// ***************************************************************
+
 	renderer.clear();
 	renderer.render(scene, camera);
 
@@ -182,6 +229,39 @@ function buildScene() {
 	jupiterMesh.name = "jupiter";
 
 	scene.add( jupiterMesh );
+
+    /// ***************************************************************
+
+	var saturnMaterials = new THREE.MeshPhongMaterial({ color: 0xf6b336 });
+                 
+	var saturnGeom = new THREE.SphereGeometry(0.08); 
+
+	const saturnMesh = new THREE.Mesh(saturnGeom, saturnMaterials); 
+	saturnMesh.name = "saturn";
+
+	scene.add( saturnMesh );
+
+    /// ***************************************************************
+
+	var uranusMaterials = new THREE.MeshPhongMaterial({ color: 0xbddbe9 });
+                 
+	var uranusGeom = new THREE.SphereGeometry(0.075); 
+
+	const uranusMesh = new THREE.Mesh(uranusGeom, uranusMaterials); 
+	uranusMesh.name = "uranus";
+
+	scene.add( uranusMesh );
+
+    /// ***************************************************************
+
+	var neptuneMaterials = new THREE.MeshPhongMaterial({ color: 0x026bAa });
+                 
+	var neptuneGeom = new THREE.SphereGeometry(0.070); 
+
+	const neptuneMesh = new THREE.Mesh(neptuneGeom, neptuneMaterials); 
+	neptuneMesh.name = "neptune";
+
+	scene.add( neptuneMesh );
 
     /// ***************************************************************
 
