@@ -1,19 +1,17 @@
 import * as THREE from 'three';
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-const 	rendSize 	= new THREE.Vector2();
+const rendSize = new THREE.Vector2();
 
-var scene, 
-	renderer, 
-	camera;
-
-let light,
-	lightProbe;
+let perspectiveCamera, orthographicCamera, controls, scene, renderer, light, lightProbe;
 
 /// ***************************************************************
 /// ***                                                          **
 /// ***************************************************************
 
 function main() {
+
+	const initialAspect = window.innerWidth / window.innerHeight;
 
 	renderer = new THREE.WebGLRenderer();
 
@@ -26,24 +24,47 @@ function main() {
 
 	document.body.appendChild(renderer.domElement);
 
-	scene 	= new THREE.Scene();
-	
-	camera = new THREE.OrthographicCamera( 
-		window.innerWidth/-200.0, 
-		window.innerWidth/200.0,
-		window.innerHeight/200.0,
-		window.innerHeight/-200.0,
-		-2.0,
-		5.0
-	);
+	document.body.appendChild(renderer.domElement);
 
-	scene.add( camera );
+	scene = new THREE.Scene();
+
+	perspectiveCamera = new THREE.PerspectiveCamera(60, initialAspect, 1, 1000);
+	perspectiveCamera.position.z = 500;
+
+	window.addEventListener('resize', onWindowResize);
+	createControls(perspectiveCamera);
 
 	buildScene();
 
-	requestAnimationFrame(animate);		
+	requestAnimationFrame(animate);
 
 };
+
+
+
+function createControls(camera) {
+
+	controls = new TrackballControls(camera, renderer.domElement);
+
+	controls.rotateSpeed = 1.0;
+	controls.zoomSpeed = 1.2;
+	controls.panSpeed = 0.8;
+
+	controls.keys = ['KeyA', 'KeyS', 'KeyD'];
+
+}
+
+function onWindowResize() {
+
+	const aspect = window.innerWidth / window.innerHeight;
+
+	perspectiveCamera.aspect = aspect;
+	perspectiveCamera.updateProjectionMatrix();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	controls.handleResize();
+
+}
 
 /// ***************************************************************
 /// ***                                                          **
@@ -51,21 +72,21 @@ function main() {
 
 function animate(time) {
 
-    var sun = scene.getObjectByName("sun");
+	var sun = scene.getObjectByName("sun");
 
 	sun.rotation.x = time * 0.00001;
 	sun.rotation.y = time * 0.0001;
 	sun.rotation.z = time * 0.0005;
 
-    /// ***************************************************************
+	/// ***************************************************************
 
 	var mercury = scene.getObjectByName("mercury");
 
 	mercury.rotation.x = time * 0.00001;
 	mercury.rotation.y = time * 0.0001;
 
-	var mercuryPosX = 0.5*Math.sin(0.003*time);
-	var mercuryPosY = 0.5*Math.cos(0.003*time);
+	var mercuryPosX = 0.5 * Math.sin(0.003 * time);
+	var mercuryPosY = 0.5 * Math.cos(0.003 * time);
 
 	mercury.position.set(mercuryPosX, mercuryPosY, 0);
 
@@ -77,12 +98,12 @@ function animate(time) {
 	venus.rotation.y = time * 0.0001;
 	venus.rotation.z = time * 0.0005;
 
-	var venusPosX = 0.6*Math.sin(0.0025*time);
-	var venusPosY = 0.6*Math.cos(0.0025*time);
+	var venusPosX = 0.6 * Math.sin(0.0025 * time);
+	var venusPosY = 0.6 * Math.cos(0.0025 * time);
 
 	venus.position.set(venusPosX, venusPosY, 0);
-	
-    /// ***************************************************************
+
+	/// ***************************************************************
 
 	var earth = scene.getObjectByName("earth");
 
@@ -90,8 +111,8 @@ function animate(time) {
 	earth.rotation.y = time * 0.0001;
 	earth.rotation.z = time * 0.0005;
 
-	var earthPosX = 0.7*Math.sin(0.002*time);
-	var earthPosY = 0.7*Math.cos(0.002*time);
+	var earthPosX = 0.7 * Math.sin(0.002 * time);
+	var earthPosY = 0.7 * Math.cos(0.002 * time);
 
 	earth.position.set(earthPosX, earthPosY, 0);
 
@@ -103,8 +124,8 @@ function animate(time) {
 	marth.rotation.y = time * 0.0001;
 	marth.rotation.z = time * 0.0005;
 
-	var marthPosX = 0.75*Math.sin(0.0019*time);
-	var marthPosY = 0.75*Math.cos(0.0019*time);
+	var marthPosX = 0.75 * Math.sin(0.0019 * time);
+	var marthPosY = 0.75 * Math.cos(0.0019 * time);
 
 	marth.position.set(marthPosX, marthPosY, 0);
 
@@ -116,8 +137,8 @@ function animate(time) {
 	jupiter.rotation.y = time * 0.0001;
 	jupiter.rotation.z = time * 0.0005;
 
-	var jupiterPosX = 1.75*Math.sin(0.0009*time);
-	var jupiterPosY = 1.75*Math.cos(0.0009*time);
+	var jupiterPosX = 1.75 * Math.sin(0.0009 * time);
+	var jupiterPosY = 1.75 * Math.cos(0.0009 * time);
 
 	jupiter.position.set(jupiterPosX, jupiterPosY, 0);
 
@@ -129,8 +150,8 @@ function animate(time) {
 	saturn.rotation.y = time * 0.0001;
 	saturn.rotation.z = time * 0.0005;
 
-	var saturnPosX = 2.2*Math.sin(0.0007*time);
-	var saturnPosY = 2.2*Math.cos(0.0007*time);
+	var saturnPosX = 2.2 * Math.sin(0.0007 * time);
+	var saturnPosY = 2.2 * Math.cos(0.0007 * time);
 
 	saturn.position.set(saturnPosX, saturnPosY, 0);
 
@@ -142,8 +163,8 @@ function animate(time) {
 	uranus.rotation.y = time * 0.0001;
 	uranus.rotation.z = time * 0.0005;
 
-	var uranusPosX = 2.6*Math.sin(0.0005*time);
-	var uranusPosY = 2.6*Math.cos(0.0005*time);
+	var uranusPosX = 2.6 * Math.sin(0.0005 * time);
+	var uranusPosY = 2.6 * Math.cos(0.0005 * time);
 
 	uranus.position.set(uranusPosX, uranusPosY, 0);
 
@@ -155,17 +176,18 @@ function animate(time) {
 	neptune.rotation.y = time * 0.0001;
 	neptune.rotation.z = time * 0.0005;
 
-	var neptunePosX = 3*Math.sin(0.00045*time);
-	var neptunePosY = 3*Math.cos(0.00045*time);
+	var neptunePosX = 3 * Math.sin(0.00045 * time);
+	var neptunePosY = 3 * Math.cos(0.00045 * time);
 
 	neptune.position.set(neptunePosX, neptunePosY, 0);
 
 	/// ***************************************************************
 
 	renderer.clear();
-	renderer.render(scene, camera);
+	controls.update();
+	renderer.render(scene, perspectiveCamera);
 
-	requestAnimationFrame(animate);		
+	requestAnimationFrame(animate);
 }
 
 /// ***************************************************************
@@ -178,110 +200,108 @@ function buildScene() {
 	scene.add(axis);
 
 	var mercuryMaterials = new THREE.MeshPhongMaterial({ color: 0xfeef00 });
-                 
-	var mercuryGeom = new THREE.SphereGeometry(0.01); 
 
-	const mercuryMesh = new THREE.Mesh(mercuryGeom, mercuryMaterials); 
+	var mercuryGeom = new THREE.SphereGeometry(0.01);
+
+	const mercuryMesh = new THREE.Mesh(mercuryGeom, mercuryMaterials);
 	mercuryMesh.name = "mercury";
 
-	scene.add( mercuryMesh );
-
-    /// ***************************************************************
-
-	var venusMaterials = new THREE.MeshPhongMaterial({ color: 0xfeef90 });
-                 
-	var venusGeom = new THREE.SphereGeometry(0.02); 
-
-	const venusMesh = new THREE.Mesh(venusGeom, venusMaterials); 
-	venusMesh.name = "venus";
-
-	scene.add( venusMesh );
-
-    /// ***************************************************************
-
-	var earthMaterials = new THREE.MeshPhongMaterial({ color: 0x0defff });
-                 
-	var earthGeom = new THREE.SphereGeometry(0.02); 
-
-	const earthMesh = new THREE.Mesh(earthGeom, earthMaterials); 
-	earthMesh.name = "earth";
-
-	scene.add( earthMesh );
-
-    /// ***************************************************************
-
-	var marthMaterials = new THREE.MeshPhongMaterial({ color: 0xfe1d0a });
-                 
-	var marthGeom = new THREE.SphereGeometry(0.019); 
-
-	const marthMesh = new THREE.Mesh(marthGeom, marthMaterials); 
-	marthMesh.name = "marth";
-
-	scene.add( marthMesh );
-
-    /// ***************************************************************
-
-	var jupiterMaterials = new THREE.MeshPhongMaterial({ color: 0xfe1e0a });
-                 
-	var jupiterGeom = new THREE.SphereGeometry(0.09); 
-
-	const jupiterMesh = new THREE.Mesh(jupiterGeom, jupiterMaterials); 
-	jupiterMesh.name = "jupiter";
-
-	scene.add( jupiterMesh );
-
-    /// ***************************************************************
-
-	var saturnMaterials = new THREE.MeshPhongMaterial({ color: 0xf6b336 });
-                 
-	var saturnGeom = new THREE.SphereGeometry(0.08); 
-
-	const saturnMesh = new THREE.Mesh(saturnGeom, saturnMaterials); 
-	saturnMesh.name = "saturn";
-
-	scene.add( saturnMesh );
-
-    /// ***************************************************************
-
-	var uranusMaterials = new THREE.MeshPhongMaterial({ color: 0xbddbe9 });
-                 
-	var uranusGeom = new THREE.SphereGeometry(0.075); 
-
-	const uranusMesh = new THREE.Mesh(uranusGeom, uranusMaterials); 
-	uranusMesh.name = "uranus";
-
-	scene.add( uranusMesh );
-
-    /// ***************************************************************
-
-	var neptuneMaterials = new THREE.MeshPhongMaterial({ color: 0x026bAa });
-                 
-	var neptuneGeom = new THREE.SphereGeometry(0.070); 
-
-	const neptuneMesh = new THREE.Mesh(neptuneGeom, neptuneMaterials); 
-	neptuneMesh.name = "neptune";
-
-	scene.add( neptuneMesh );
-
-    /// ***************************************************************
-
-    var sunMaterials = new THREE.MeshPhongMaterial({ color: 0xfebe00, emissive: 0xfebe00 });
-    var sunGeom = new THREE.SphereGeometry(0.2);
-    const sunMesh = new THREE.Mesh(sunGeom, sunMaterials);
-    sunMesh.name = "sun";
-    sunMesh.position.set(0,0,0);
-
-    scene.add( sunMesh );
+	scene.add(mercuryMesh);
 
 	/// ***************************************************************
 
-	light = new THREE.PointLight( 0xffffff, 1.0 );
-	light.position.set( 0, 0, 0 );
-	scene.add( light );
+	var venusMaterials = new THREE.MeshPhongMaterial({ color: 0xfeef90 });
+
+	var venusGeom = new THREE.SphereGeometry(0.02);
+
+	const venusMesh = new THREE.Mesh(venusGeom, venusMaterials);
+	venusMesh.name = "venus";
+
+	scene.add(venusMesh);
+
+	/// ***************************************************************
+
+	var earthMaterials = new THREE.MeshPhongMaterial({ color: 0x0defff });
+
+	var earthGeom = new THREE.SphereGeometry(0.02);
+
+	const earthMesh = new THREE.Mesh(earthGeom, earthMaterials);
+	earthMesh.name = "earth";
+
+	scene.add(earthMesh);
+
+	/// ***************************************************************
+
+	var marthMaterials = new THREE.MeshPhongMaterial({ color: 0xfe1d0a });
+
+	var marthGeom = new THREE.SphereGeometry(0.019);
+
+	const marthMesh = new THREE.Mesh(marthGeom, marthMaterials);
+	marthMesh.name = "marth";
+
+	scene.add(marthMesh);
+
+	/// ***************************************************************
+
+	var jupiterMaterials = new THREE.MeshPhongMaterial({ color: 0xfe1e0a });
+
+	var jupiterGeom = new THREE.SphereGeometry(0.09);
+
+	const jupiterMesh = new THREE.Mesh(jupiterGeom, jupiterMaterials);
+	jupiterMesh.name = "jupiter";
+
+	scene.add(jupiterMesh);
+
+	/// ***************************************************************
+
+	var saturnMaterials = new THREE.MeshPhongMaterial({ color: 0xf6b336 });
+
+	var saturnGeom = new THREE.SphereGeometry(0.08);
+
+	const saturnMesh = new THREE.Mesh(saturnGeom, saturnMaterials);
+	saturnMesh.name = "saturn";
+
+	scene.add(saturnMesh);
+
+	/// ***************************************************************
+
+	var uranusMaterials = new THREE.MeshPhongMaterial({ color: 0xbddbe9 });
+
+	var uranusGeom = new THREE.SphereGeometry(0.075);
+
+	const uranusMesh = new THREE.Mesh(uranusGeom, uranusMaterials);
+	uranusMesh.name = "uranus";
+
+	scene.add(uranusMesh);
+
+	/// ***************************************************************
+
+	var neptuneMaterials = new THREE.MeshPhongMaterial({ color: 0x026bAa });
+
+	var neptuneGeom = new THREE.SphereGeometry(0.070);
+
+	const neptuneMesh = new THREE.Mesh(neptuneGeom, neptuneMaterials);
+	neptuneMesh.name = "neptune";
+
+	scene.add(neptuneMesh);
+
+	/// ***************************************************************
+
+	var sunMaterials = new THREE.MeshPhongMaterial({ color: 0xfebe00, emissive: 0xfebe00 });
+	var sunGeom = new THREE.SphereGeometry(0.2);
+	const sunMesh = new THREE.Mesh(sunGeom, sunMaterials);
+	sunMesh.name = "sun";
+	sunMesh.position.set(0, 0, 0);
+
+	scene.add(sunMesh);
+
+	light = new THREE.PointLight(0xffffff, 1.0);
+	light.position.set(0, 0, 0);
+	scene.add(light);
 
 	lightProbe = new THREE.LightProbe();
 	lightProbe.intensity = 0.64
-	scene.add( lightProbe );
+	scene.add(lightProbe);
 
 }
 
